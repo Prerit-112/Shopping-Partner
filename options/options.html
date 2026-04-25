@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Shopping Research Agent — Options</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 640px;
+        margin: 24px auto;
+        padding: 0 16px;
+        line-height: 1.5;
+      }
+      label {
+        display: block;
+        margin-top: 14px;
+        font-weight: 600;
+      }
+      input[type='text'],
+      input[type='password'],
+      select,
+      textarea {
+        width: 100%;
+        box-sizing: border-box;
+        margin-top: 4px;
+        padding: 8px;
+      }
+      textarea {
+        min-height: 72px;
+      }
+      .hint {
+        font-size: 12px;
+        color: #555;
+        font-weight: normal;
+      }
+      #status {
+        margin-top: 16px;
+        color: #0a0;
+      }
+      button {
+        margin-top: 20px;
+        padding: 10px 18px;
+        cursor: pointer;
+      }
+      .weight-row {
+        margin-top: 12px;
+        padding: 10px 12px;
+        background: #f6f7f9;
+        border-radius: 8px;
+      }
+      .weight-row label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        font-weight: 600;
+        margin-top: 0;
+      }
+      .weight-row input[type='range'] {
+        width: 100%;
+        margin-top: 8px;
+      }
+      .weight-val {
+        font-weight: 600;
+        color: #333;
+        min-width: 2.5em;
+        text-align: right;
+      }
+      h2.section {
+        font-size: 1.05rem;
+        margin-top: 28px;
+        margin-bottom: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Shopping Research Agent</h1>
+    <p>API keys are stored locally in <code>chrome.storage.local</code> and are not committed to source control.</p>
+
+    <label for="openai">OpenAI API key</label>
+    <input type="password" id="openai" autocomplete="off" />
+    <span class="hint">Used for chat completions + structured verdict.</span>
+
+    <label for="search">SearchAPI.io API key</label>
+    <input type="password" id="search" autocomplete="off" />
+    <span class="hint"
+      ><a href="https://www.searchapi.io/" target="_blank" rel="noopener">SearchAPI.io</a> (Google engine) —
+      powers <code>web_search</code>, <code>price_deal_signal</code>, and <code>find_alternatives</code>.</span
+    >
+
+    <label for="model">Model</label>
+    <input type="text" id="model" placeholder="gpt-4o-mini" />
+    <span class="hint">Optional override (default gpt-4o-mini).</span>
+
+    <label for="budget">Maximum comfortable budget (INR)</label>
+    <div class="weight-row">
+      <span class="hint" id="budget-disp" style="display: block; margin-top: 4px">Flexible — no fixed cap</span>
+      <input type="range" id="budget" min="0" max="500000" step="500" value="0" />
+    </div>
+    <span class="hint">Slide to set a soft spending ceiling (continuous). 0 means flexible. Used in prompts as a guide, not a strict limit.</span>
+
+    <label for="region">Region</label>
+    <select id="region">
+      <option value="IN">India (IN)</option>
+      <option value="US">United States (US)</option>
+      <option value="EU">EU</option>
+      <option value="other">Other</option>
+    </select>
+
+    <label for="priorities">Priorities</label>
+    <textarea id="priorities" placeholder="e.g. battery, warranty, noise"></textarea>
+
+    <h2 class="section">Verdict factor weights</h2>
+    <p class="hint">
+      How much each dimension should influence the final verdict and reasoning (1 = lowest, 5 = highest). The agent spends more research effort on higher-weight areas and explains trade-offs using these weights.
+    </p>
+    <div class="weight-row">
+      <label for="w-price">Price / value <span class="weight-val"><span id="disp-price">3</span>/5</span></label>
+      <input type="range" id="w-price" min="1" max="5" step="1" value="3" />
+    </div>
+    <div class="weight-row">
+      <label for="w-reviews">Reviews &amp; reputation <span class="weight-val"><span id="disp-reviews">3</span>/5</span></label>
+      <input type="range" id="w-reviews" min="1" max="5" step="1" value="3" />
+    </div>
+    <div class="weight-row">
+      <label for="w-features">Features &amp; specs <span class="weight-val"><span id="disp-features">3</span>/5</span></label>
+      <input type="range" id="w-features" min="1" max="5" step="1" value="3" />
+    </div>
+    <div class="weight-row">
+      <label for="w-reliability">Reliability &amp; support <span class="weight-val"><span id="disp-reliability">3</span>/5</span></label>
+      <input type="range" id="w-reliability" min="1" max="5" step="1" value="3" />
+    </div>
+
+    <label for="avoid">Brands to avoid / deprioritize</label>
+    <input type="text" id="avoid" placeholder="comma-separated" />
+
+    <label for="mode">Research mode</label>
+    <select id="mode">
+      <option value="quick">Quick (fewer tool turns)</option>
+      <option value="deep">Deep (more tool turns)</option>
+    </select>
+
+    <label for="detail">Agent activity detail</label>
+    <select id="detail">
+      <option value="on">Detailed timeline (default)</option>
+      <option value="minimal">Minimal (summary line)</option>
+    </select>
+
+    <button type="button" id="save">Save</button>
+    <h2 class="section">LLM debug logs</h2>
+    <p class="hint">
+      Each research or follow-up run appends a detailed trace (metadata, request/response summaries, token usage when provided) to local storage. API keys are never written to these logs.
+    </p>
+    <button type="button" id="export-llm-logs">Download LLM logs as JSON</button>
+    <div id="status"></div>
+
+    <script src="options.js"></script>
+  </body>
+</html>

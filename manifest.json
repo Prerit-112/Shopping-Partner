@@ -1,0 +1,50 @@
+{
+  "manifest_version": 3,
+  "name": "Shopping Research Agent",
+  "version": "1.0.0",
+  "description": "Web-search-first product research on Amazon and Flipkart with structured verdict and agent activity trace.",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": [
+    "https://api.openai.com/*",
+    "https://www.searchapi.io/*"
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "Shopping Research Agent",
+    "default_popup": "options/popup.html"
+  },
+  "options_page": "options/options.html",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.amazon.com/*",
+        "https://*.amazon.in/*",
+        "https://*.amazon.co.uk/*",
+        "https://*.amazon.de/*",
+        "https://*.flipkart.com/*"
+      ],
+      "js": [
+        "content/detector.js",
+        "content/snapshot.js",
+        "content/panel.js"
+      ],
+      "css": ["content/panel-host.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["content/panel.css"],
+      "matches": [
+        "https://*.amazon.com/*",
+        "https://*.amazon.in/*",
+        "https://*.amazon.co.uk/*",
+        "https://*.amazon.de/*",
+        "https://*.flipkart.com/*"
+      ]
+    }
+  ]
+}

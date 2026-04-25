@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Shopping Research Agent</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 12px 14px;
+        min-width: 240px;
+      }
+      a {
+        color: #0369a1;
+      }
+    </style>
+  </head>
+  <body>
+    <p><strong>Shopping Research Agent</strong></p>
+    <p>Open Amazon or Flipkart product pages to see the side panel.</p>
+    <p><a id="opts" href="#">Extension options</a></p>
+    <script>
+      document.getElementById('opts').addEventListener('click', (e) => {
+        e.preventDefault();
+        chrome.runtime.openOptionsPage();
+      });
+    </script>
+  </body>
+</html>
